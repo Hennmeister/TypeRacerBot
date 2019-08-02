@@ -45,11 +45,12 @@ def getText(driver):
 
 def sendText(driver, inputTxt):
 	print("send text")
-	actions = ActionChains(driver)
 	for c in inputTxt:
+		print(c)
+		actions = ActionChains(driver)
 		actions.send_keys(c)
-		time.sleep(1)
 		actions.perform()
+		time.sleep(0.05)
 
 def main():
 	startup()
