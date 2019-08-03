@@ -14,17 +14,23 @@ import time
 def startup():
 	driver = webdriver.Chrome()
 	driver.get("https://play.typeracer.com/")
+	try:
+		countdown = WebDriverWait(driver, 5).until(
+			EC.presence_of_element_located((By.LINK_TEXT, "Enter a typing race")))
+	except TimeoutException:
+		print "failed to find enter race label"
+
 	driver.find_element_by_link_text('Enter a typing race').click()
-	inputTxt = getText(driver)
-	#print(getText(driver))
+
 	try:
 		countdown = WebDriverWait(driver, 5).until(
 			EC.presence_of_element_located((By.CLASS_NAME, "lightLabel")))
+		inputTxt = getText(driver)
 	except TimeoutException:
 		print "failed to find lightLabel"
 
 	try:
-		WebDriverWait(driver, 15).until(EC.staleness_of(countdown))
+		WebDriverWait(driver, 20).until(EC.staleness_of(countdown))
 		print "done"
 		sendText(driver, inputTxt)
 	except TimeoutException:
@@ -50,10 +56,11 @@ def sendText(driver, inputTxt):
 		actions = ActionChains(driver)
 		actions.send_keys(c)
 		actions.perform()
-		time.sleep(0.05)
+		time.sleep(0.025)
 
 def main():
 	startup()
+	time.sleep(10)
 
 if __name__ == "__main__":
 	main()
